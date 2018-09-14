@@ -5,7 +5,7 @@ using Toybox.Math;
 class OfflineCompassView extends WatchUi.View {
 
 	public static var active = 0;
-	public static var array = [5, 0, 1, 2, 3, 4, 5, 5, 5, 1, 2, 5, 5, 5];
+	public static var array = [100, 5, 5, 0, 1, 2, 3, 4, 100, 0, 0, 8, 1, 2, 5, 5, 5];
 	
 	public static var navigationMode = false;
 	public static var direction = 0;
@@ -72,35 +72,52 @@ class OfflineCompassView extends WatchUi.View {
 		var c = Graphics.getFontAscent(font)*0.6;
 		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
 		var pos = 0;
-		for(var i = 0; i < 14; i++) {
+		for(var i = 0; i < 17; i++) {
 			if(i==active) {
 				dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_WHITE);
 			}
 			
-			if(i<7) {
-				dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*pos), (dc.getHeight()/2)-50, font, array[i], Graphics.TEXT_JUSTIFY_CENTER);
+			if(i<8) {
+				if(i==0) {
+					if(array[i]==100) {
+						dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*pos), (dc.getHeight()/2)-50, font, "N", Graphics.TEXT_JUSTIFY_CENTER);
+					}
+					if(array[i]==200) {
+						dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*pos), (dc.getHeight()/2)-50, font, "S", Graphics.TEXT_JUSTIFY_CENTER);
+					}
+					pos++; //Space after the first digit N|S
+				} else {
+					dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*pos), (dc.getHeight()/2)-50, font, array[i], Graphics.TEXT_JUSTIFY_CENTER);
+				}
 			} else {
-				dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*(pos-9)), (dc.getHeight()/2)-15, font, array[i], Graphics.TEXT_JUSTIFY_CENTER);
+				if(i==8) {
+					if(array[i]==100) {
+						dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*(pos-11)), (dc.getHeight()/2)-15, font, "E", Graphics.TEXT_JUSTIFY_CENTER);
+					}
+					if(array[i]==200) {
+						dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*(pos-11)), (dc.getHeight()/2)-15, font, "W", Graphics.TEXT_JUSTIFY_CENTER);
+					}
+				} else {
+					dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*(pos-11)), (dc.getHeight()/2)-15, font, array[i], Graphics.TEXT_JUSTIFY_CENTER);
+				}
 			}
 			
-			
-			
 			dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
-			if(i==1) {
+			if(i==2) {
 				pos++;
 				dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*pos), (dc.getHeight()/2)-50, font, "°", Graphics.TEXT_JUSTIFY_CENTER);
 			}
-			if(i==3) {
+			if(i==4) {
 				pos++;
 				dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*pos), (dc.getHeight()/2)-50, font, ".", Graphics.TEXT_JUSTIFY_CENTER);
 			}
-			if(i==8) {
+			if(i==11) {
 				pos++;
-				dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*(pos-9)), (dc.getHeight()/2)-15, font, "°", Graphics.TEXT_JUSTIFY_CENTER);
+				dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*(pos-11)), (dc.getHeight()/2)-15, font, "°", Graphics.TEXT_JUSTIFY_CENTER);
 			}
-			if(i==10) {
+			if(i==13) {
 				pos++;
-				dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*(pos-9)), (dc.getHeight()/2)-15, font, ".", Graphics.TEXT_JUSTIFY_CENTER);
+				dc.drawText((dc.getWidth()/2)-(c*4.5)+(c*(pos-11)), (dc.getHeight()/2)-15, font, ".", Graphics.TEXT_JUSTIFY_CENTER);
 			}
 			pos++;
 		}

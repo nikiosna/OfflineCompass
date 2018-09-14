@@ -27,29 +27,49 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
         //System.println("SWIPE:  " + swipeEvent.getDirection()); // e.g. SWIPE_RIGHT = 1
         if(swipeEvent.getDirection()==1) {
         	OfflineCompassView.active++;
-        	if(OfflineCompassView.active==14) {
+        	if(OfflineCompassView.active==17) {
         		OfflineCompassView.active=0;
         	}
         }
         if(swipeEvent.getDirection()==3) {
         	OfflineCompassView.active--;
         	if(OfflineCompassView.active==-1) {
-        		OfflineCompassView.active=13;
+        		OfflineCompassView.active=16;
         	}
         }
         if(swipeEvent.getDirection()==0) {
         	var temp = OfflineCompassView.array;
-        	temp[OfflineCompassView.active]++;
-        	if(temp[OfflineCompassView.active]==10) {
-        		temp[OfflineCompassView.active]=0;
+        	var i = OfflineCompassView.active;
+        	
+        	if(i==0 || i==8) {
+        		if(temp[i]==200) {
+        			temp[i]=100;
+        		} else {
+        			temp[i]=200;
+        		}
+        	} else {
+        		temp[i]++;
+        		if(temp[i]==10) {
+        			temp[i]=0;
+        		}
         	}
         	OfflineCompassView.array = temp;
         }
         if(swipeEvent.getDirection()==2) {
         	var temp = OfflineCompassView.array;
-        	temp[OfflineCompassView.active]--;
-        	if(temp[OfflineCompassView.active]==-1) {
-        		temp[OfflineCompassView.active]=9;
+        	var i = OfflineCompassView.active;
+        	
+        	if(i==0 || i==8) {
+        		if(temp[i]==200) {
+        			temp[i]=100;
+        		} else {
+        			temp[i]=200;
+        		}
+        	} else {
+        		temp[i]--;
+        		if(temp[i]==-1) {
+        			temp[i]=9;
+        		}
         	}
         	OfflineCompassView.array = temp;
         }
@@ -70,8 +90,16 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
     function calcDistance() {
         if(OfflineCompassView.navigationMode) {
    			var a = OfflineCompassView.array;
-        	var lat = 10*a[0] + a[1] + ( 10*a[2] + a[3] + 0.1*a[4]   + 0.01*a[5]  + 0.001*a[6] )/60;
-        	var lon = 10*a[7] + a[8] + ( 10*a[9] + a[10] + 0.1*a[11]  + 0.01*a[12] + 0.001*a[13] )/60;
+   			
+   			var lat = 10*a[1] + a[2] + ( 10*a[3] + a[4] + 0.1*a[5]   + 0.01*a[6]  + 0.001*a[7] )/60;
+   			if(a[0]==200) {
+   				lat = lat*-1;
+   			}
+        	var lon = 100*a[9] + 10*a[10] + a[11] + ( 10*a[12] + a[13] + 0.1*a[14]  + 0.01*a[15] + 0.001*a[16] )/60;
+        	if(a[8]==200) {
+   				lat = lat*-1;
+   			}
+        	
         	var lat1 =  myLocation[0];
         	var lon1 =  myLocation[1];
         
