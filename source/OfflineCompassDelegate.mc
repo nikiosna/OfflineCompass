@@ -58,7 +58,7 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
     }
     
     function onTap(clickEvent) {
-        System.println("TAP - XY:  " + clickEvent.getCoordinates() + "  TYPE:  " + clickEvent.getType()); // e.g. [36, 40]
+        System.println("TAP - XY:  " + clickEvent.getCoordinates() + "  TYPE:  " + clickEvent.getType());
         return true;
     }
     
@@ -74,30 +74,25 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
         	var lon = 10*a[7] + a[8] + ( 10*a[9] + a[10] + 0.1*a[11]  + 0.01*a[12] + 0.001*a[13] )/60;
         	var lat1 =  myLocation[0];
         	var lon1 =  myLocation[1];
-        	/*var lat = 52.517;
-        	var lon = 13.4;
-        	var lat1= 35.7;
-        	var lon1= 139.767;*/
         
        		/*System.println("lat " + lat + "  lon " + lon);
 			System.println("lat1 " + lat1 + "  lon1 " +lon1);*/
         
-        	lat = Math.toRadians(lat);
-        	lon = Math.toRadians(lon);
-        	lat1= Math.toRadians(lat1);
-        	lon1= Math.toRadians(lon1);
+        	lat = Math.toRadians(lat).toDouble();
+        	lon = Math.toRadians(lon).toDouble();
+        	lat1= Math.toRadians(lat1).toDouble();
+        	lon1= Math.toRadians(lon1).toDouble();
         
 			var phi = Math.acos( Math.sin(lat)*Math.sin(lat1) + Math.cos(lat)*Math.cos(lat1) * Math.cos(lon1 - lon) );
-			var dist = phi*6370*1000;
-			//var alpha = Math.acos( (Math.sin(lat1) - Math.sin(lat)*Math.cos(phi) )/( Math.cos(lat1)*Math.sin(phi) ));
-			var beta  = Math.acos( (Math.sin(lat) - Math.sin(lat1)*Math.cos(phi) )/( Math.cos(lat1)*Math.sin(phi) ));
+			var dist = phi*6371000;
+			//var alpha = Math.acos( (Math.sin(lat1) - Math.sin(lat)*Math.cos(phi) )/( Math.cos(lat1)*Math.sin(phi) )); //Direction from A->B
+			var beta  = Math.acos( (Math.sin(lat) - Math.sin(lat1)*Math.cos(phi) )/( Math.cos(lat1)*Math.sin(phi) ));   //Direction from B->A
 
 			/*System.println("phi " + Math.toDegrees(phi) + " dist " + dist);
-			//System.println("alpha " + Math.toDegrees(alpha));
 			System.println("beta " + Math.toDegrees(beta));
-			System.println("heading " + Sensor.getInfo().heading);*/
+			System.println("heading " + Math.toDegrees(Sensor.getInfo().heading));*/
 			
-			OfflineCompassView.direction = Math.toDegrees(beta + Sensor.getInfo().heading);
+			OfflineCompassView.direction = Math.toDegrees(beta - Sensor.getInfo().heading);
 			OfflineCompassView.distance  = dist;
 			WatchUi.requestUpdate();
     	}
