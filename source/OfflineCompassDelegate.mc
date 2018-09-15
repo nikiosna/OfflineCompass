@@ -18,7 +18,9 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
     		OfflineCompassView.navigationMode = !OfflineCompassView.navigationMode;
     		calcDistance();
     	} else {
-    		System.println("No GPS fix");
+    		OfflineCompassView.noGpsFixMessage = true;
+    		WatchUi.requestUpdate();
+    		//System.println("No GPS fix");
     	}
         return true;
     }
@@ -77,10 +79,10 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
     
-    function onTap(clickEvent) {
+    /*function onTap(clickEvent) {
         System.println("TAP - XY:  " + clickEvent.getCoordinates() + "  TYPE:  " + clickEvent.getType());
         return true;
-    }
+    }*/
     
     function onPosition(info) {
     	myLocation = info.position.toDegrees();

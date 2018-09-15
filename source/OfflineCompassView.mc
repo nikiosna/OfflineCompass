@@ -7,6 +7,7 @@ class OfflineCompassView extends WatchUi.View {
 	public static var active = 0;
 	public static var array = [100, 5, 5, 0, 1, 2, 3, 4, 100, 0, 0, 8, 1, 2, 5, 5, 5];
 	
+	public static var noGpsFixMessage = false;
 	public static var navigationMode = false;
 	public static var direction = 0;
 	public static var distance = 0;
@@ -41,6 +42,10 @@ class OfflineCompassView extends WatchUi.View {
 
 		if(!navigationMode) {
 			drawCoordMenu(dc);
+			if(noGpsFixMessage) {
+				dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+				dc.drawText(dc.getWidth()/2, (dc.getHeight()/2)+60, Graphics.FONT_TINY, "NO GPS", Graphics.TEXT_JUSTIFY_CENTER);
+			}
 		} else{
 			drawCompass(dc, direction);
 			
@@ -56,6 +61,7 @@ class OfflineCompassView extends WatchUi.View {
 			}
 			dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
 			dc.drawText(dc.getWidth()/2, (dc.getHeight()/2)+80, Graphics.FONT_TINY, string, Graphics.TEXT_JUSTIFY_CENTER);
+			
 		}
 		
 	}
