@@ -19,7 +19,6 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
     }
     
     function onSwipe(swipeEvent) {
-        //inversed left and right because swipe_right is not available on some watches
         if(swipeEvent.getDirection()==1) {
 			left();
         }
@@ -125,13 +124,16 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
     
     function confirm() {
 		if(myLocation!=null && Sensor.getInfo()!=null) {
+			if(OfflineCompassView.navigationMode==true) {
+				WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+			}
     		OfflineCompassView.navigationMode = !OfflineCompassView.navigationMode;
     		calcDistance();
     	} else {
     		OfflineCompassView.noGpsFixMessage = true;
-    		WatchUi.requestUpdate();
     		//System.println("No GPS fix");
     	}
+    	WatchUi.requestUpdate();
     }
     
     function calcDistance() {
@@ -169,7 +171,6 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
 			
 			OfflineCompassView.direction = Math.toDegrees(beta - Sensor.getInfo().heading);
 			OfflineCompassView.distance  = dist;
-			WatchUi.requestUpdate();
     	}
     }
     
