@@ -12,71 +12,54 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
         BehaviorDelegate.initialize();
         Position.enableLocationEvents(Position.LOCATION_CONTINUOUS, method(:onPosition));
     }
-
+    
     function onMenu() {
-    	if(myLocation!=null && Sensor.getInfo()!=null) {
-    		OfflineCompassView.navigationMode = !OfflineCompassView.navigationMode;
-    		calcDistance();
-    	} else {
-    		OfflineCompassView.noGpsFixMessage = true;
-    		WatchUi.requestUpdate();
-    		//System.println("No GPS fix");
-    	}
+		confirm();
         return true;
     }
     
     function onSwipe(swipeEvent) {
-        //System.println("SWIPE:  " + swipeEvent.getDirection()); // e.g. SWIPE_RIGHT = 1
+        //inversed left and right because swipe_right is not available on some watches
         if(swipeEvent.getDirection()==1) {
-        	OfflineCompassView.active++;
-        	if(OfflineCompassView.active==17) {
-        		OfflineCompassView.active=0;
-        	}
+			left();
         }
         if(swipeEvent.getDirection()==3) {
-        	OfflineCompassView.active--;
-        	if(OfflineCompassView.active==-1) {
-        		OfflineCompassView.active=16;
-        	}
+			right();
         }
         if(swipeEvent.getDirection()==0) {
-        	var temp = OfflineCompassView.array;
-        	var i = OfflineCompassView.active;
-        	
-        	if(i==0 || i==8) {
-        		if(temp[i]==200) {
-        			temp[i]=100;
-        		} else {
-        			temp[i]=200;
-        		}
-        	} else {
-        		temp[i]++;
-        		if(temp[i]==10) {
-        			temp[i]=0;
-        		}
-        	}
-        	OfflineCompassView.array = temp;
+			up();
         }
         if(swipeEvent.getDirection()==2) {
-        	var temp = OfflineCompassView.array;
-        	var i = OfflineCompassView.active;
-        	
-        	if(i==0 || i==8) {
-        		if(temp[i]==200) {
-        			temp[i]=100;
-        		} else {
-        			temp[i]=200;
-        		}
-        	} else {
-        		temp[i]--;
-        		if(temp[i]==-1) {
-        			temp[i]=9;
-        		}
-        	}
-        	OfflineCompassView.array = temp;
+			down();
         }
-        WatchUi.requestUpdate();
         return true;
+    }
+    
+    function onKey(keyEvent) {
+        //System.println(keyEvent.getKey());
+        //System.println(keyEvent.getType());
+        
+        if(keyEvent.getKey()==5) {
+			right();
+        }
+        /*if(keyEvent.getKey()==__) {
+			left();
+        }*/
+        if(keyEvent.getKey()==13) {
+			up();
+        }
+        if(keyEvent.getKey()==8) {
+			down();
+        }
+        if(keyEvent.getKey()==4) {
+			confirm();
+        }
+        return true;
+    }
+    
+	function onPosition(info) {
+    	myLocation = info.position.toDegrees();
+    	calcDistance();
     }
     
     /*function onTap(clickEvent) {
@@ -84,9 +67,71 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }*/
     
-    function onPosition(info) {
-    	myLocation = info.position.toDegrees();
-    	calcDistance();
+    function left() {
+		OfflineCompassView.active--;
+        if(OfflineCompassView.active==-1) {
+        	OfflineCompassView.active=16;
+        }
+        WatchUi.requestUpdate();
+    }
+    
+    function right() {
+    	OfflineCompassView.active++;
+        if(OfflineCompassView.active==17) {
+        	OfflineCompassView.active=0;
+        }
+        WatchUi.requestUpdate();
+    }
+    
+    function up() {
+		var temp = OfflineCompassView.array;
+        var i = OfflineCompassView.active;
+        	
+        if(i==0 || i==8) {
+        	if(temp[i]==200) {
+        		temp[i]=100;
+        	} else {
+        		temp[i]=200;
+        	}
+        } else {
+        	temp[i]++;
+        	if(temp[i]==10) {
+        		temp[i]=0;
+        	}
+        }
+        OfflineCompassView.array = temp;
+        WatchUi.requestUpdate();
+    }
+    
+    function down() {
+    	var temp = OfflineCompassView.array;
+        var i = OfflineCompassView.active;
+        
+        if(i==0 || i==8) {
+        	if(temp[i]==200) {
+        		temp[i]=100;
+        	} else {
+        		temp[i]=200;
+        	}
+        } else {
+        	temp[i]--;
+        	if(temp[i]==-1) {
+        		temp[i]=9;
+        	}
+        }
+        OfflineCompassView.array = temp;
+        WatchUi.requestUpdate();
+    }
+    
+    function confirm() {
+		if(myLocation!=null && Sensor.getInfo()!=null) {
+    		OfflineCompassView.navigationMode = !OfflineCompassView.navigationMode;
+    		calcDistance();
+    	} else {
+    		OfflineCompassView.noGpsFixMessage = true;
+    		WatchUi.requestUpdate();
+    		//System.println("No GPS fix");
+    	}
     }
     
     function calcDistance() {
@@ -127,4 +172,5 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
 			WatchUi.requestUpdate();
     	}
     }
+    
 }
