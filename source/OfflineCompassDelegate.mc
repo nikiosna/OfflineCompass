@@ -14,7 +14,7 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
     }
     
     function onMenu() {
-		confirm();
+		menu();
         return true;
     }
     
@@ -51,7 +51,7 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
 			down();
         }
         if(keyEvent.getKey()==4) {
-			confirm();
+			menu();
         }
         return true;
     }
@@ -122,11 +122,12 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
         WatchUi.requestUpdate();
     }
     
-    function confirm() {
+    function menu() {
+    	if(OfflineCompassView.navigationMode==true || OfflineCompassView.noGpsFixMessage==true) {
+    		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+    		System.exit();
+		}
 		if(myLocation!=null && Sensor.getInfo()!=null) {
-			if(OfflineCompassView.navigationMode==true) {
-				System.exit();
-			}
     		OfflineCompassView.navigationMode = !OfflineCompassView.navigationMode;
     		calcDistance();
     	} else {
