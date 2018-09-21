@@ -20,10 +20,10 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
     
     function onSwipe(swipeEvent) {
         if(swipeEvent.getDirection()==1) {
-			left();
+			right();
         }
         if(swipeEvent.getDirection()==3) {
-			right();
+			left();
         }
         if(swipeEvent.getDirection()==0) {
 			up();
@@ -125,7 +125,7 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
     function confirm() {
 		if(myLocation!=null && Sensor.getInfo()!=null) {
 			if(OfflineCompassView.navigationMode==true) {
-				WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+				System.exit();
 			}
     		OfflineCompassView.navigationMode = !OfflineCompassView.navigationMode;
     		calcDistance();
