@@ -15,6 +15,7 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
     
     function onMenu() {
 		menu();
+		WatchUi.requestUpdate();
         return true;
     }
     
@@ -31,6 +32,7 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
         if(swipeEvent.getDirection()==2) {
 			down();
         }
+        WatchUi.requestUpdate();
         return true;
     }
     
@@ -53,12 +55,15 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
         if(keyEvent.getKey()==4) {
 			menu();
         }
+        WatchUi.requestUpdate();
         return true;
     }
     
 	function onPosition(info) {
     	myLocation = info.position.toDegrees();
     	calcDistance();
+    	WatchUi.requestUpdate();
+    	return true;
     }
     
     /*function onTap(clickEvent) {
@@ -71,7 +76,6 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
         if(OfflineCompassView.active==-1) {
         	OfflineCompassView.active=16;
         }
-        WatchUi.requestUpdate();
     }
     
     function right() {
@@ -79,7 +83,6 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
         if(OfflineCompassView.active==17) {
         	OfflineCompassView.active=0;
         }
-        WatchUi.requestUpdate();
     }
     
     function up() {
@@ -119,7 +122,6 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
         	}
         }
         OfflineCompassView.array = temp;
-        WatchUi.requestUpdate();
     }
     
     function menu() {
@@ -134,7 +136,6 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
     		OfflineCompassView.noGpsFixMessage = true;
     		//System.println("No GPS fix");
     	}
-    	WatchUi.requestUpdate();
     }
     
     function calcDistance() {
