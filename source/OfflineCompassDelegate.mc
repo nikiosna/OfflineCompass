@@ -125,17 +125,22 @@ class OfflineCompassDelegate extends WatchUi.BehaviorDelegate {
     }
     
     function menu() {
-    	if(OfflineCompassView.navigationMode==true || OfflineCompassView.noGpsFixMessage==true) {
+    	if(OfflineCompassView.pressedMenuTwice) {
     		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
     		System.exit();
 		}
-		if(myLocation!=null && Sensor.getInfo()!=null) {
-    		OfflineCompassView.navigationMode = !OfflineCompassView.navigationMode;
+		if(isGpsReady()) {
+		   	OfflineCompassView.navigationMode = !OfflineCompassView.navigationMode;
     		calcDistance();
-    	} else {
-    		OfflineCompassView.noGpsFixMessage = true;
-    		//System.println("No GPS fix");
+		}
+		OfflineCompassView.pressedMenuTwice=true;
+    }
+    
+    public static function isGpsReady() {
+		if(myLocation!=null && Sensor.getInfo()!=null) {
+    		return true;
     	}
+    	return false;
     }
     
     function calcDistance() {
