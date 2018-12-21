@@ -7,8 +7,7 @@ class OfflineCompassView extends WatchUi.View {
 	public static var active = 0;
 	public static var array = [100, 5, 5, 0, 1, 2, 3, 4, 100, 0, 0, 8, 1, 2, 5, 5, 5];
 	
-	public static var pressedMenuTwice = false;
-	public static var navigationMode = false;
+	public static var currentView = "input";
 	public static var direction = 0;
 	public static var distance = 0;
 
@@ -18,7 +17,7 @@ class OfflineCompassView extends WatchUi.View {
 
     // Load your resources here
     function onLayout(dc) {
-    	System.println("width=" + dc.getWidth() + " height=" + dc.getHeight());	
+    	//System.println("width=" + dc.getWidth() + " height=" + dc.getHeight());	
         setLayout(Rez.Layouts.MainLayout(dc));
     }
    
@@ -39,9 +38,9 @@ class OfflineCompassView extends WatchUi.View {
         
         //dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
     	//dc.clear();
-
-		if(!navigationMode) {
-			drawCoordMenu(dc);
+    	
+    	if(currentView.equals("input")) {
+    		drawCoordMenu(dc);
 			if(OfflineCompassDelegate.isGpsReady()) {
 				dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
 				dc.drawText(dc.getWidth()/2, (dc.getHeight()/2)+60, Graphics.FONT_TINY, "GPS", Graphics.TEXT_JUSTIFY_CENTER);
@@ -49,8 +48,32 @@ class OfflineCompassView extends WatchUi.View {
 				dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
 				dc.drawText(dc.getWidth()/2, (dc.getHeight()/2)+60, Graphics.FONT_TINY, "NO GPS", Graphics.TEXT_JUSTIFY_CENTER);
 			}
-		} else{
-			drawCompass(dc, direction);
+    	}
+    	else if(currentView.equals("menu")) {
+    		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
+    		for(var i = 0; i < 6; i++) {
+    			if(i==active) {
+    				dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_WHITE);
+    			}
+    			if(i==0) {
+    				dc.drawText(dc.getWidth()/2, (dc.getHeight()/2)-75, Graphics.FONT_TINY, "Navigate", Graphics.TEXT_JUSTIFY_CENTER);
+    			} else if(i==1) {
+    				dc.drawText(dc.getWidth()/2, (dc.getHeight()/2)-45, Graphics.FONT_TINY, "Back to input", Graphics.TEXT_JUSTIFY_CENTER);
+    			} else if(i==2) {
+    				dc.drawText(dc.getWidth()/2, (dc.getHeight()/2)-15, Graphics.FONT_TINY, "Save input", Graphics.TEXT_JUSTIFY_CENTER);
+    			} else if(i==3) {
+    				//TODO change to Save GPS
+    				dc.drawText(dc.getWidth()/2, (dc.getHeight()/2)+15, Graphics.FONT_TINY, "Load GPS", Graphics.TEXT_JUSTIFY_CENTER);
+    			} else if(i==4) {
+    				dc.drawText(dc.getWidth()/2, (dc.getHeight()/2)+45, Graphics.FONT_TINY, "Load saved", Graphics.TEXT_JUSTIFY_CENTER);
+    			} else if(i==5) {
+    				dc.drawText(dc.getWidth()/2, (dc.getHeight()/2)+75, Graphics.FONT_TINY, "Exit", Graphics.TEXT_JUSTIFY_CENTER);
+    			}
+    			dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
+    		}
+    	}
+    	else if(currentView.equals("compass")) {
+    		drawCompass(dc, direction);
 			
 			var string = "";
 			if(distance >= 100000) {
@@ -65,8 +88,7 @@ class OfflineCompassView extends WatchUi.View {
 			dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
 			dc.drawText(dc.getWidth()/2, (dc.getHeight()/2)+80, Graphics.FONT_TINY, string, Graphics.TEXT_JUSTIFY_CENTER);
 			
-		}
-		
+		}		
 	}
 
     // Called when this View is removed from the screen. Save the
@@ -151,5 +173,5 @@ class OfflineCompassView extends WatchUi.View {
 		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
 		dc.fillPolygon(result);
     }
-     
+    
 }
